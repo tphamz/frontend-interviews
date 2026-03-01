@@ -1,24 +1,24 @@
 "use client";
 // import { Carousel } from "@/components/carousel";
 import Carousel from "@/components/carousel2";
-import InfiniteScroll from "@/components/infinite-scroll2";
+import InfiniteScroll from "@/components/infinite-scroll";
 import { TabBody, TabHeader, TabHeaders, TabList } from "@/components/tabs";
 import {
-  TabBody as TabBody2,
+  TabContent as TabBody2,
   TabHeader as TabHeader2,
   TabHeaders as TabHeaders2,
-  TabList as TabList2,
+  Tabs as TabList2,
 } from "@/components/tab2";
 
-// import InfiniteScroll from "@/components/infinite-scroll";
 import { useState } from "react";
 import {
   Accordian,
   AccordianBody,
   AccordianHeader,
   Accordians,
-} from "@/components/accordian";
+} from "@/components/accordian2";
 import DatePicker from "@/components/date-picker";
+import VirtualScroll from "@/components/virtual-scroll/index2";
 
 export default function Home() {
   const currentDate = new Date();
@@ -35,8 +35,12 @@ export default function Home() {
     "https://buffer.com/resources/content/images/2025/03/social-media-image-sizes.png",
   ]);
 
-  const apiCall = (offset: number) => {
+  const apiCall = (data: any) => {
+    console.log("apiCall", data);
     return new Promise((resolve, _) => {
+      if (!data) data = 0;
+      const offset =
+        typeof data === "object" ? data.index : Math.ceil(data / 100);
       if (offset === 10) resolve([]);
       return resolve(
         Array.from({ length: 100 }, (_, index) => 100 * offset + index)
@@ -53,6 +57,7 @@ export default function Home() {
           <TabHeader value={"infiniteScroll"}>Infinite Scroll</TabHeader>
           <TabHeader value={"accordians"}>Accordians</TabHeader>
           <TabHeader value={"datepicker"}>Date Picker</TabHeader>
+          <TabHeader value={"virtualList"}>Virtual List</TabHeader>
         </TabHeaders>
 
         <TabBody value={"tab"}>
@@ -74,7 +79,7 @@ export default function Home() {
         </TabBody>
 
         <TabBody value={"accordians"}>
-          <Accordians defaultValue={"1"} multiple>
+          <Accordians defaultValue={"1"}>
             <Accordian value="1">
               <AccordianHeader>Header 1</AccordianHeader>
               <AccordianBody>Body 1</AccordianBody>
@@ -92,6 +97,10 @@ export default function Home() {
 
         <TabBody value={"datepicker"}>
           <DatePicker min={minDate} max={maxDate} />
+        </TabBody>
+
+        <TabBody value={"virtualList"}>
+          <VirtualScroll apiCall={apiCall} />
         </TabBody>
       </TabList>
     </div>
